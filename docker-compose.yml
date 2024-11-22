@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.1
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: usuarios_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+
+  web-insert:
+    build:
+      context: ./web-insert
+    container_name: web-insert-container
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+
+  web-list:
+    build:
+      context: ./web-list
+    container_name: web-list-container
+    ports:
+      - "8082:80"
+    depends_on:
+      - mysql
